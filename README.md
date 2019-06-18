@@ -51,10 +51,9 @@ Implement REST API server that exposes the objects
 expected.
 
 #### Instructions:
-* launch Flask REST API server
-`python -m app`
+* install Flask `pip install flask`
+* launch Flask REST API server `python -m app`
 * launch unittests
-  * classes:
-  `python -m app.tests.utest_classes`
-  * REST API:
-  `python -m app.tests.utest_rest`
+  * classes: `python -m app.tests.utest_classes`
+  * REST API: `python -m app.tests.utest_rest`
+  * it's ok that test lasts one minute: see task definition
