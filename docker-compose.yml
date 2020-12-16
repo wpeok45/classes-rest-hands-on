@@ -1,0 +1,24 @@
+version: '2'
+
+services:
+   wlmigrate:
+     image: python:3.6
+     container_name: wlmigrate
+     restart: always
+     expose:
+       - 5771
+     environment:
+       VIRTUAL_HOST:  wlmigrate.testxyz.com
+       VIRTUAL_PORT: 5771
+       LETSENCRYPT_HOST: wlmigrate.testxyz.com
+       LETSENCRYPT_EMAIL: admin@.testxyz.com
+     networks:
+       ngproxy_default:
+     volumes:
+       - wlmigrate:/app/
+     working_dir: /app
+     command: sh -c "pip install -r requirements.txt && python -m app"
+networks:
+  ngproxy_default:
+    external:
+      name: ngproxy_default
