@@ -2,7 +2,7 @@
  
 from app.classes import *
 from flask import Flask, abort
-from flask_restx import Api, Resource, fields, OrderedModel
+from flask_restx import Api, Resource, fields
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
