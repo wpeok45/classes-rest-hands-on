@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import Dict, List, Tuple
+#from typing import Dict, List, Tuple
 import time
 import pickle
 import os
@@ -23,7 +23,7 @@ class Workload(Common):
                 isinstance(credentials, Credentials) and
                 isinstance(storage, list) and
                 (False not in [isinstance(x, MountPoint) for x in storage])):
-            #    ^^ all storage elements belong to MountPoint class
+            #    ^^ all storage elements refer to MountPoint class
             self.ip = ip
             self.credentials = credentials
             self.storage = storage
@@ -60,7 +60,6 @@ class Credentials(Common):
 class MountPoint(Common):
     # name: str
     # size: int
-
     def __init__(self, name, size):
         if isinstance(name, str) and isinstance(size, int):
             self.name = name
@@ -177,7 +176,7 @@ class Migration(Common):
             self.migration_target.target_vm.ip = self.source.ip
             self.migration_target.target_vm.credentials =\
                 self.source.credentials
-            time.sleep(60)
+            time.sleep(5)
             self.migration_state = "success"
         else:
             self.migration_state = "error"

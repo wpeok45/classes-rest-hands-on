@@ -4,7 +4,7 @@ import unittest
 import app.rest as app
 import requests
 import app.tests.json_test_strings as j
-
+from pprint import pprint
 DEFAULT_HEADER = 'application/json'
 
 
@@ -32,72 +32,72 @@ class TestRest(unittest.TestCase):
 
     def test_workload_migration(self):
         # workload add
-        status, response = self._request("/workload", j.wl_add_1, "PUT")
-        self.assertEqual(response['status'], '0')
-        status, response = self._request("/workload", j.wl_add_2, "PUT")
-        self.assertEqual(response['status'], '1')
+        status, response = self._request("/workload/", j.wl_add_1, "POST")
+        self.assertEqual(status, 201)
+        status, response = self._request("/workload/", j.wl_add_2, "POST")
+        self.assertEqual(status, 201)
 
         # migration add
-        status, response = self._request("/migration", j.migr_add_1, "PUT")
-        self.assertEqual(response['status'], '0')
-        status, response = self._request("/migration", j.migr_add_2, "PUT")
-        self.assertEqual(response['status'], '1')
-        status, response = self._request("/migration", j.migr_add_3, "PUT")
+        status, response = self._request("/migration/", j.migr_add_1, "POST")
+        self.assertEqual(status, 201)
+        status, response = self._request("/migration/", j.migr_add_2, "POST")
+        self.assertEqual(status, 201)
+        status, response = self._request("/migration/", j.migr_add_3, "POST")
         self.assertEqual(status, 400)
-        status, response = self._request("/migration", j.migr_add_4, "PUT")
+        status, response = self._request("/migration/", j.migr_add_4, "POST")
         self.assertEqual(status, 400)
-        status, response = self._request("/migration", j.migr_add_5, "PUT")
+        status, response = self._request("/migration/", j.migr_add_5, "POST")
         self.assertEqual(status, 400)
-        status, response = self._request("/migration", j.migr_add_6, "PUT")
+        status, response = self._request("/migration/", j.migr_add_6, "POST")
         self.assertEqual(status, 400)
-        status, response = self._request("/migration", j.migr_add_7, "PUT")
+        status, response = self._request("/migration/", j.migr_add_7, "POST")
         self.assertEqual(status, 400)
-        status, response = self._request("/migration", j.migr_add_8, "PUT")
+        status, response = self._request("/migration/", j.migr_add_8, "POST")
         self.assertEqual(status, 400)
 
         # migration modify
-        status, response = self._request("/migration/0", j.migr_mod_1, "POST")
-        self.assertEqual(response['status'], 'modified')
-        status, response = self._request("/migration/7", j.migr_mod_1, "POST")
-        self.assertEqual(response['status'], 'not found')
-        status, response = self._request("/migration/1", j.migr_mod_2, "POST")
-        self.assertEqual(response['status'], 'not modified')
+        status, response = self._request("/migration/0", j.migr_mod_1, "PUT")
+        self.assertEqual(status, 200)
+        status, response = self._request("/migration/7", j.migr_mod_1, "PUT")
+        self.assertEqual(status, 404)
+        status, response = self._request("/migration/1", j.migr_mod_2, "PUT")
+        self.assertEqual(status, 304)
 
         # migration run
         status, response = self._request("/migration/1/run", req="GET")
-        self.assertEqual(response['status'], 'success')
+        self.assertEqual(status, 200)
         status, response = self._request("/migration/10/run", req="GET")
-        self.assertEqual(response['status'], 'not found')
+        self.assertEqual(status, 404)
 
         # migration check finished
         status, response = self._request("/migration/1/finished", req="GET")
-        self.assertEqual(response['status'], 'finished')
+        self.assertEqual(response, 'finished')
         status, response = self._request("/migration/0/finished", req="GET")
-        self.assertEqual(response['status'], 'not finished')
+        self.assertEqual(response, 'not finished')
         status, response = self._request("/migration/10/finished", req="GET")
-        self.assertEqual(response['status'], 'not found')
+        self.assertEqual(status, 404)
 
         # migration remove
         status, response = self._request("/migration/0", req="DELETE")
-        self.assertEqual(response['status'], 'removed')
+        self.assertEqual(status, 204)
         status, response = self._request("/migration/1", req="DELETE")
-        self.assertEqual(response['status'], 'removed')
+        self.assertEqual(status, 204)
 
         # workload modify
-        status, response = self._request("/workload/0", j.wl_mod_1, "POST")
-        self.assertEqual(response['status'], 'modified')
-        status, response = self._request("/workload/1", j.wl_mod_2, "POST")
-        self.assertEqual(response['status'], 'modified')
-        status, response = self._request("/workload/10", j.wl_mod_2, "POST")
-        self.assertEqual(response['status'], 'not found')
-        status, response = self._request("/workload/0", j.wl_mod_3, "POST")
-        self.assertEqual(response['status'], 'not modified')
+        status, response = self._request("/workload/0", j.wl_mod_1, "PUT")
+        self.assertEqual(status, 200)
+        status, response = self._request("/workload/1", j.wl_mod_2, "PUT")
+        self.assertEqual(status, 200)
+        status, response = self._request("/workload/10", j.wl_mod_2, "PUT")
+        self.assertEqual(status, 404)
+        status, response = self._request("/workload/0", j.wl_mod_3, "PUT")
+        self.assertEqual(status, 304)
 
         # workload remove
         status, response = self._request("/workload/0", req="DELETE")
-        self.assertEqual(response['status'], 'removed')
+        self.assertEqual(status, 204)
         status, response = self._request("/workload/1", req="DELETE")
-        self.assertEqual(response['status'], 'removed')
+        self.assertEqual(status, 204)
 
 
 if __name__ == "__main__":
